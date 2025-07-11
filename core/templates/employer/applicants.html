@@ -1,0 +1,190 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #f3f2ef;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .dashboard-header {
+        /* background-color: #ffffff; */
+        padding: 2rem 1.5rem;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+        margin-bottom: 2rem;
+        /* box-shadow: 0 2px 4px rgba(0,0,0,0.06); */
+    }
+
+    .dashboard-header h1 {
+        font-size: 2rem;
+        color: #0a66c2;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .dashboard-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        padding: 0 5%;
+    }
+
+    .info-card {
+        background-color: #fff;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease;
+        border: 1px solid #e2e2e2;
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .info-card h5 {
+        font-size: 1.2rem;
+        color: #0a66c2;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-card p {
+        margin: 0.4rem 0;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .btn-download {
+        display: inline-block;
+        margin-top: 1rem;
+        background-color: #0a66c2;
+        color: #fff;
+        padding: 0.45rem 1.2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 0.3rem;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .btn-download:hover {
+        background-color: #004182;
+        text-decoration: none;
+    }
+
+    .no-data {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #777;
+        margin-top: 3rem;
+    }
+
+    /* Pagination styling */
+    .pagination {
+        text-align: center;
+        margin: 3rem 0;
+    }
+
+    .pagination ul {
+        list-style: none;
+        display: inline-flex;
+        gap: 0.5rem;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pagination li {
+        display: inline;
+    }
+
+    .pagination a,
+    .pagination span {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #0a66c2;
+        color: white;
+        border-radius: 0.3rem;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #004182;
+    }
+
+    .pagination .active {
+        background-color: #004182;
+    }
+</style>
+
+<div class="dashboard-header">
+    <h1>Job Applicants</h1>
+</div>
+
+<div class="dashboard-content">
+    {% if applications %}
+        {% for app in applications %}
+            <div class="info-card">
+                <h5>{{ app.applicant.get_full_name }} - {{ app.job.title }}</h5>
+                <p><strong>Email:</strong> {{ app.applicant.email }}</p>
+                <p><strong>Applied at:</strong> {{ app.applied_at }}</p>
+                <p><strong>Cover Letter:</strong> {{ app.cover_letter|default:"No message" }}</p>
+                <p>
+                    {% if app.cv and app.cv.name %}
+                        <a href="{% url 'download_cv' app.id %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-download"></i> Download CV
+                        </a>
+                    {% else %}
+                        <span class="text-muted">No CV uploaded</span>
+                    {% endif %}
+                </p>
+
+                <p><strong>Status:</strong> {{ app.status|title }}</p>
+
+                <!-- Update Status Buttons -->
+                <div class="status-actions">
+                    <a href="{% url 'update_application_status' app.id 'viewed' %}" class="btn-sm btn-secondary">Mark as Viewed</a>
+                    <a href="{% url 'update_application_status' app.id 'shortlisted' %}" class="btn-sm btn-success">Shortlist</a>
+                    <a href="{% url 'update_application_status' app.id 'rejected' %}" class="btn-sm btn-danger">Reject</a>
+                </div>
+                <!-- Send Email Button -->
+                <div class="mt-2">
+                    <a href="{% url 'send_email_to_applicant' app.id %}" class="btn btn-sm btn-outline-info">
+                        <i class="fas fa-envelope"></i> Email Applicant
+                    </a>
+                </div>
+
+            </div>
+
+        {% endfor %}
+    {% else %}
+        <p class="no-data">No applicants found.</p>
+    {% endif %}
+</div>
+
+{% if applications.has_other_pages %}
+<div class="pagination">
+    <ul>
+        {% if applications.has_previous %}
+            <li><a href="?page={{ applications.previous_page_number }}">Previous</a></li>
+        {% endif %}
+
+        {% for num in applications.paginator.page_range %}
+            {% if applications.number == num %}
+                <li><span class="active">{{ num }}</span></li>
+            {% elif num > applications.number|add:'-3' and num < applications.number|add:'3' %}
+                <li><a href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if applications.has_next %}
+            <li><a href="?page={{ applications.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+{% endblock %}

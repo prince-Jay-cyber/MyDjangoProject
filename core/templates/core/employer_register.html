@@ -1,0 +1,130 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Employer Register - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    .employer-register-split-bg {
+        min-height: 80vh;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        background: #fff;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .employer-register-left {
+        background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100%;
+        padding: 3rem 2rem;
+        flex: 1 1 50%;
+        text-align: center;
+    }
+    .employer-register-left h2 {
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        letter-spacing: 1px;
+    }
+    .employer-register-illustration {
+        width: 100%;
+        max-width: 340px;
+        margin-bottom: 2rem;
+    }
+    .employer-register-right {
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100%;
+        padding: 3rem 2rem;
+        flex: 1 1 50%;
+    }
+    .employer-register-logo {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #f857a6;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .employer-register-btn {
+        background: #f857a6;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        padding: 0.7rem 0;
+        width: 100%;
+        border: none;
+        transition: background 0.2s;
+        margin-top: 0.5rem;
+    }
+    .employer-register-btn:hover {
+        background: #ff5858;
+    }
+    .employer-register-link {
+        text-align: right;
+        margin-top: 1.2rem;
+        font-size: 0.97rem;
+    }
+    .employer-register-link a {
+        color: #f857a6;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    .employer-register-link a:hover {
+        text-decoration: underline;
+    }
+    @media (max-width: 991px) {
+        .employer-register-split-bg { border-radius: 0; flex-direction: column; }
+        .employer-register-left, .employer-register-right { flex: 1 1 100%; }
+    }
+    @media (max-width: 767px) {
+        .employer-register-left, .employer-register-right { padding: 2rem 1rem; }
+    }
+</style>
+<div class="container my-5">
+    <div class="employer-register-split-bg">
+        <!-- Left Side -->
+        <div class="employer-register-left">
+            <h2>Welcome Employer!<br>Grow your team with us</h2>
+            <img src="{% static 'employer_illustration.png' %}" alt="Employer Illustration" class="employer-register-illustration mb-4">
+            <p style="max-width: 350px; margin: 0 auto;">
+                Register your company and post jobs to reach thousands of talented professionals. Manage applications and find the perfect candidates for your business.
+            </p>
+        </div>
+        <!-- Right Side -->
+        <div class="employer-register-right">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="employer-register-logo">
+                    <img src="{% static 'logo-1.png' %}" alt="Logo" width="36" height="36">
+                    NsaJob
+                </span>
+                <span class="employer-register-link d-none d-lg-block">
+                    Already have an account?
+                    <a href="{% url 'employer_login' %}">Login</a>
+                </span>
+            </div>
+            <h3 class="fw-bold mb-2">Employer Registration</h3>
+            <div class="mb-3 text-muted" style="font-size:1rem;">Create your employer account to start posting jobs and managing applications.</div>
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="employer-register-btn">Register as Employer</button>
+            </form>
+            <div class="employer-register-link d-lg-none mt-3">
+                Already have an account?
+                <a href="{% url 'employer_login' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

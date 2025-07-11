@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ user.username }}'s Profile - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    .edit-profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        /* border: 3px solid #0a66c2; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        left: 30px;
+    }
+    .container{
+        animation: fadeInUp 0.4s ease-in;
+
+    }
+    @keyframes fadeInUp{
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+</style>
+<div class="container py-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-dark text-white">
+            <h2 class="mb-0"><i class="bi bi-person-badge-fill"></i> {{ user.username }}'s Profile</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4 class="mb-3">Profile Summary</h4>
+                    <div class="edit-profile-avatar">
+                        {% if request.user.profile.photo %}
+                            <img src="{{ request.user.profile.photo.url }}" alt="Profile" class="edit-profile-avatar shadow">
+                        {% else %}
+                            <img src="{% static 'employee.png' %}" alt="Profile" class="edit-profile-avatar shadow">
+                        {% endif %}
+                    </div> <br>
+                    <div class="col-md-8">
+                        <h4 class="mb-3">About Me</h4>
+                        <p>{{ profile.bio|linebreaks }}</p>
+                    </div>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Applications
+                            <span class="badge bg-primary rounded-pill">{{ application_count }}</span>
+                        </li>
+                        <li class="list-group-item"><strong><i class="fas fa-envelope"></i> Email:</strong> {{ user.email }}</li>
+                        <li class="list-group-item"><strong><i class="fas fa-phone"></i> Phone:</strong> {{ profile.phone }}</li>
+                        {% if profile.resume_file %}
+                        <li class="list-group-item">
+                            <a href="{{ profile.resume_file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-file-download"></i> View Resume
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                
+            </div>
+        </div>
+        <div class="card-footer bg-light text-center">
+            <a href="{% url 'edit_profile' %}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit Profile</a>
+            <a href="{% url 'home' %}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle-fill"></i> Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

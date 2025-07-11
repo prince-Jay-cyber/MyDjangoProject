@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Available Jobs - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+        animation: fadeInUp 0.4s ease-in;
+    }
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+</style>
+<div class="container py-5">
+    <h1 class="mb-4">💼 Available Jobs</h1>
+
+    {% if page_obj %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for job in page_obj %}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow rounded-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-secondary text-light px-3 py-1 rounded-pill">
+                                    {{ job.category }}
+                                </span>
+                                <small class="text-muted">
+                                    {{ job.created_at|timesince }} ago
+                                </small>
+                            </div>
+
+                            <h5 class="card-title fw-bold mb-1">
+                                {{ job.title }}
+                            </h5>
+                            <h6 class="text-muted mb-3">
+                                {{ job.location }}
+                            </h6>
+
+                            <p class="mb-3 text-muted">
+                                <strong>Posted by:</strong>
+                                <span class="fw-semibold">{{ job.get_company_display_name }}</span>
+                            </p>
+
+                            <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary w-100">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        </div>
+
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; first</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </a>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle-fill"></i> No jobs are available at the moment. Please check back later.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

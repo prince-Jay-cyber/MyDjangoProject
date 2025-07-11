@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Apply for {{ job.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    body{
+        animation: fadeInUp 0.4s ease-in;
+    }
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    .apply-job-card {
+        border-radius: 1.5rem;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        overflow: hidden;
+        margin-top: 2.5rem;
+        background: #fff;
+    }
+    .apply-job-header {
+        background: linear-gradient(90deg, #0a66c2 0%, #004182 100%);
+        color: #fff;
+        border-top-left-radius: 1.5rem;
+        border-top-right-radius: 1.5rem;
+        padding: 2.5rem 2rem 1.5rem 2rem;
+        text-align: center;
+        position: relative;
+    }
+    .apply-job-logo {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 1rem;
+        border: 4px solid #fff;
+        margin-top: -36px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .apply-job-title {
+        font-size: 1.7rem;
+        font-weight: 700;
+        margin-top: 0.7rem;
+        margin-bottom: 0.2rem;
+    }
+    .apply-job-meta {
+        font-size: 1.1rem;
+        color: #e0e0e0;
+        margin-bottom: 0.2rem;
+    }
+    .apply-job-company {
+        font-weight: 600;
+        color: #fff;
+        font-size: 1.1rem;
+    }
+    .apply-job-location {
+        color: #e0e0e0;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .apply-job-note {
+        font-size: 1rem;
+        color: #f3f3f3;
+        margin-bottom: 0.5rem;
+    }
+    .apply-job-form-section {
+        padding: 2rem 2.5rem 2rem 2.5rem;
+        background: #fff;
+    }
+    .apply-job-actions {
+        border-top: 1px solid #eee;
+        padding: 1.5rem 2.5rem;
+        background: #f8fafc;
+        border-bottom-left-radius: 1.5rem;
+        border-bottom-right-radius: 1.5rem;
+        text-align: right;
+    }
+    @media (max-width: 767px) {
+        .apply-job-form-section, .apply-job-actions {
+            padding: 1.2rem 1rem;
+        }
+        .apply-job-header {
+            padding: 2rem 1rem 1.2rem 1rem;
+        }
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="apply-job-card">
+            <div class="apply-job-header">
+                <img src="{% static 'job.png' %}" alt="Job Logo" class="apply-job-logo shadow">
+                <div class="apply-job-title">Apply for {{ job.title }}</div>
+                <div class="apply-job-company">{{ job.category }}</div>
+                <div class="apply-job-location"><i class="fas fa-map-marker-alt"></i> {{ job.location }}</div>
+                <div class="apply-job-note">Your application will be sent directly to the employer</div>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="apply-job-form-section">
+                    {{ form|crispy }}
+                </div>
+                <div class="apply-job-actions">
+                    <a href="{% url 'job_detail' job.id %}" class="btn btn-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i> Submit Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

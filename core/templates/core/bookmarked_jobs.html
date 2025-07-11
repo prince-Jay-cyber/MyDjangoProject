@@ -1,0 +1,106 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Bookmarked Jobs - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    .bookmarks-container {
+        animation: fadeInUp 0.4s ease-in;
+        padding-top: 3rem;
+    }
+
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bookmarks-header {
+        font-weight: 700;
+        font-size: 1.75rem;
+        color: #0a66c2;
+        margin-bottom: 1.5rem;
+    }
+
+    .card {
+        border-radius: 1rem;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .list-group-item {
+        transition: all 0.3s ease;
+        border: none;
+        border-bottom: 1px solid #eee;
+        padding: 1rem 1.25rem;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    .list-group-item:hover {
+        background-color: #f5f9ff;
+        box-shadow: inset 2px 0 0 #0a66c2;
+        cursor: pointer;
+    }
+
+    .list-group-item h5 {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .list-group-item p {
+        margin-bottom: 0;
+        color: #555;
+    }
+
+    .text-muted {
+        font-size: 0.85rem;
+    }
+
+    .alert-info {
+        background-color: #e9f5ff;
+        color: #0a66c2;
+        border: 1px solid #b8e1ff;
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        padding: 1.25rem;
+    }
+</style>
+
+<div class="container bookmarks-container">
+    <h1 class="bookmarks-header">🔖 Bookmarked Jobs</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if bookmarks %}
+                <div class="list-group">
+                    {% for bookmark in bookmarks %}
+                        <a href="{% url 'job_detail' bookmark.job.id %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ bookmark.job.title }}</h5>
+                                <small class="text-muted">{{ bookmark.created_at|timesince }} ago</small>
+                            </div>
+                            <p class="mb-1">
+                                <i class="bi bi-geo-alt"></i> {{ bookmark.job.location }} &nbsp; | &nbsp;
+                                <i class="bi bi-briefcase"></i> {{ bookmark.job.category }}
+                            </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle-fill me-2"></i> You haven't bookmarked any jobs yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

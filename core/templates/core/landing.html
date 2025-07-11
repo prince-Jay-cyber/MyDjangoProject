@@ -1,0 +1,679 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% load humanize %}
+
+{% block title %}Your Career Starts Here - JobConnect Ghana{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+<style>
+    body{
+        animation: fadeInUp 0.4s ease-in;
+
+    }
+
+    @keyframes fadeInUp{
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    .hero-bg {
+        background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
+        border-radius: 2rem;
+        margin-bottom: 2rem;
+    }
+    /*  */
+
+    .category-card {
+        transition: all 0.3s ease;
+    }
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+    .company-logos img {
+        /* max-height: 32px; */
+        margin: 0 1.5rem 1rem 0;
+        opacity: 0.7;
+        filter: grayscale(1);
+        width: 120px;
+        height: 100px;
+    }
+
+    .companies-section {
+        padding: 56px 8vw 0 8vw;
+    }
+    .companies-section h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+    .companies-section p {
+        color: #888;
+        margin-bottom: 24px;
+        font-size: 1rem;
+    }
+    .companies-list {
+        display: flex;
+        gap: 32px;
+        flex-wrap: wrap;
+    }
+    .company-card {
+        background: #f6f6fa;
+        border-radius: 12px;
+        padding: 18px 20px;
+        text-align: center;
+        width: 120px;
+        min-height: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .company-card img {
+        width: 38px;
+        height: 38px;
+        margin-bottom: 10px;
+        filter: grayscale(1) brightness(0.7);
+    }
+    .company-card .company-name {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 2px;
+    }
+    .company-card .company-positions {
+            color: #5b4fff;
+            font-size: 0.95rem;
+    }
+    .testimonial-card {
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+        padding: 2rem 1.5rem;
+        margin: 1rem 0;
+    }
+    .cta-section {
+        background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+        color: #fff;
+        border-radius: 1.5rem;
+        padding: 2.5rem 2rem;
+        margin-top: 2rem;
+        text-align: center;
+    }
+    .how-it-works-step {
+        text-align: center;
+        padding: 2rem 1rem;
+        border-radius: 1rem;
+        background: #f8fafc;
+        margin: 0.5rem;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.03);
+        min-width: 200px;
+    }
+    .how-it-works-step i {
+        font-size: 2.5rem;
+        color: #2563eb;
+        margin-bottom: 1rem;
+    }
+    .featured-employers-carousel img {
+        max-height: 60px;
+        margin: 0 1.5rem;
+        filter: grayscale(0.5);
+        opacity: 0.8;
+    }
+    .career-resource-card {
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+        padding: 1.5rem 1rem;
+        margin: 0.5rem;
+        min-width: 220px;
+        text-align: center;
+        transition: box-shadow 0.2s;
+    }
+    .career-resource-card:hover {
+        box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    .explore{
+        background-color:#020245;
+    }
+    
+    .listings-section {
+        /* background: #f6f6fa; */
+        padding: 56px 0;
+        margin-top: 56px;
+    }
+        .listings-section h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            padding-left: 8vw;
+        }
+        .listings-section p {
+            color: #ffffff;
+            margin-bottom: 24px;
+            font-size: 1rem;
+            padding-left: 8vw;
+        }
+        .job-listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 28px;
+            padding: 0 8vw;
+        }
+        .job-card {
+            background: #000534;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(91, 79, 255, 0.07);
+            padding: 22px 20px 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 210px;
+            position: relative;
+            color: #fff;
+        }
+        .job-card .urgent {
+            background: #ff4d4f;
+            color: #fff;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            padding: 2px 8px;
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-weight: 600;
+        }
+        .job-card .job-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+        .job-card .company {
+            color: #5b4fff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        /*  */
+        .job-card .location, .job-card .type {
+            color: #ffffff;
+            font-size: 0.97rem;
+        }
+        .job-card .tags {
+            margin: 8px 0 0 0;
+        }
+        .job-card .tags span {
+            background: #020245;
+            color: #ffffff;
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 0.9rem;
+            margin-right: 6px;
+        }
+        .job-card .job-details-btn {
+            background: #5b4fff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-weight: 600;
+            margin-top: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .hero-image {
+                margin: 32px 0 0 0;
+                width: 100%;
+                max-width: 340px;
+                align-self: center;
+            }
+        }
+        @media (max-width: 600px) {
+            header, .hero, .companies-section, .listings-section {
+                padding-left: 4vw;
+                padding-right: 4vw;
+            }
+            .job-listings {
+                padding: 0 4vw;
+            }
+        }
+
+        .view-all{
+            background-color:#020245;
+        }
+
+        .slider_logo {
+            width: 100%;
+            overflow: hidden;
+            background: #f8f9fa;
+            padding: 1rem 0;
+        }
+
+        .logos {
+            display: flex;
+            width: max-content;
+            align-items: center;
+            animation: slideLeft 30s linear infinite;
+        }
+
+        .logos img {
+            height: 60px;
+            margin: 0 20px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes slideLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        
+        .slider_logo:hover .logos {
+            animation-play-state: paused;
+        }
+
+</style>
+
+    <!-- Hero Section -->
+   <div class="container-fluid hero-bg py-5" style="background: linear-gradient(120deg, #000534 60%, #4f8cff 100%); border-radius: 0 0 3rem 3rem;">
+        <div class="container">
+            <div class="row align-items-center min-vh-60">
+                <!-- Text Column -->
+                <div class="col-lg-6 col-md-12 px-4 py-4 text-white">
+                    <h1 class="display-4 fw-bold mb-3" style="font-family: 'Inter', sans-serif;">
+                        Find Your Dream<br>Jobs Here
+                    </h1>
+                    <p class="lead mb-4" style="max-width: 500px;">
+                        Work with the largest network of independent professionals and get things done—from quick turnarounds to big transformation.
+                    </p>
+
+                    <!-- Search Form -->
+                    <form class="row g-2 mb-4" method="get" action="{% url 'job_list' %}" style="max-width: 500px;">
+                        <div class="col-8">
+                            <input type="text" class="form-control" name="keyword" placeholder="Job Title or Keyword">
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary w-100" type="submit" style="background: #4f8cff; border: none;">Search</button>
+                        </div>
+                    </form>
+                    {% for category in categories %}
+                        <span class="badge bg-light text-dark me-2">{{ category.name }}</span>
+                    {% endfor %}
+
+                    <!-- Popular Tags -->
+                    <div>
+                        
+                    </div>
+                </div>
+
+                <!-- Image Column -->
+                <div class="col-lg-6 col-md-12 d-flex justify-content-center py-4">
+                    <div class="position-relative" style="max-width: 340px;">
+                        <img src="{% static 'hero-illustration.png' %}" alt="Career illustration" class="img-fluid rounded-4 shadow" style="max-width: 100%;">
+
+                        <!-- Top Left Badge -->
+                        <span style="
+                            position: absolute;
+                            top: 30px;
+                            left: 20px;
+                            background: #ff885e;
+                            color: #fff;
+                            border-radius: 2rem;
+                            padding: 0.5rem 1.2rem;
+                            font-weight: 600;
+                            font-size: 1rem;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                        ">
+                            <i class="fas fa-briefcase me-1"></i> 1000+ Job Posts
+                        </span>
+
+                        <!-- Bottom Right Badge -->
+                        <span style="
+                            position: absolute;
+                            bottom: 30px;
+                            right: 20px;
+                            background: #7e6fff;
+                            color: #fff;
+                            border-radius: 2rem;
+                            padding: 0.5rem 1.2rem;
+                            font-weight: 600;
+                            font-size: 1rem;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                        ">
+                            <i class="fas fa-check-circle me-1"></i> Job Posting Create & Publish
+                        </span>
+
+                        <!-- Decorative Circles -->
+                        <span style="position: absolute; top: 0; right: 100px; font-size: 1.5rem; color: #f8e71c;">&#9679;</span>
+                        <span style="position: absolute; bottom: 0; left: 100px; font-size: 1.2rem; color: #00e6ff;">&#9679;</span>
+                        <span style="position: absolute; top: 80px; right: 30px; font-size: 1.2rem; color: #ff4dff;">&#9679;</span>
+                        <span style="position: absolute; bottom: 60px; left: 30px; font-size: 1.2rem; color: #7cffb2;">&#9679;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Company Logos Carousel -->
+    <div class="slider_logo">
+        <div class="logos">
+            <!-- Duplicate logos for seamless looping -->
+            <img src="{% static 'company-1.png' %}" alt="Company 1">
+            <img src="{% static 'company-2.png' %}" alt="Company 2">
+            <img src="{% static 'company-3.png' %}" alt="Company 3">
+            <img src="{% static 'company-4.png' %}" alt="Company 4">
+            <img src="{% static 'company-5.png' %}" alt="Company 5">
+            <img src="{% static 'company-6.png' %}" alt="Company 6">
+            <img src="{% static 'company-7.png' %}" alt="Company 7">
+            <img src="{% static 'company-8.png' %}" alt="Company 8">
+            <img src="{% static 'company-9.png' %}" alt="Company 9">
+
+            <!-- Repeating the same logos for smooth looping -->
+            <img src="{% static 'company-1.png' %}" alt="Company 1">
+            <img src="{% static 'company-2.png' %}" alt="Company 2">
+            <img src="{% static 'company-3.png' %}" alt="Company 3">
+            <img src="{% static 'company-4.png' %}" alt="Company 4">
+            <img src="{% static 'company-5.png' %}" alt="Company 5">
+            <img src="{% static 'company-6.png' %}" alt="Company 6">
+            <img src="{% static 'company-7.png' %}" alt="Company 7">
+            <img src="{% static 'company-8.png' %}" alt="Company 8">
+            <img src="{% static 'company-9.png' %}" alt="Company 9">
+        </div>
+    </div>
+
+
+    <!-- Where Ambition Meets Opportunity -->
+    <div class="container mb-5">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <img src="{% static 'ambition.jpg' %}" alt="Ambition" class="img-fluid rounded-4 shadow-sm">
+            </div>
+            <div class="col-md-6">
+                <h2 class="fw-bold mb-3">Where Ambition Meets Opportunity</h2>
+                <p class="mb-4">We connect millions of professionals with companies looking for the right talent. Whether you're a recent graduate, a seasoned expert, or looking to make a career pivot, our smart tools, personalized job matches, and career resources help you take the next step with confidence.</p>
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg explore">Explore Now</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Most Demanded Job Categories -->
+    <div class="container mb-5">
+        <h3 class="fw-bold mb-4 text-center">Most Demanded Job Categories</h3>
+        {% for category in categories %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="category-card border rounded-4 p-4 h-100 shadow-sm text-center transition">
+
+                <h6 class="fw-semibold mb-1">{{ category.name }}</h6>
+                <p class="text-muted small">{{ category.job_count }}+ jobs</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <section class="listings-section container mb-5" id="job-listings">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
+            <div class="text-center text-md-start">
+                <h2 class="fw-bold mb-1">💼 Latest Listings</h2>
+                <p class="text-muted mb-0">Get started with the best job opportunities near you</p>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <a href="{% url 'job_list' %}" class="btn btn-outline-primary view-all rounded-pill px-4">
+                    View All Jobs
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for job in latest_jobs %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="job-card p-3 shadow-sm h-100 border rounded">
+                    {% if job.is_urgent %}
+                        <span class="urgent badge bg-danger mb-2">URGENT</span>
+                    {% endif %}
+                    <div class="company fw-semibold mb-1">
+                        {{ job.get_company_display_name }}
+                    </div>
+
+                    <div class="job-title fw-bold mb-1">{{ job.title }}</div>
+                    <div class="location  mb-1">{{ job.location }}</div>
+                    <div class="type text-primary mb-2">{{ job.job_type }}</div>
+                    <div class="tags mb-3">
+                        <span class="badge bg-secondary">{{ job.category }}</span>
+                    </div>
+                    <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-outline-primary">Job details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="py-5 bg-light">
+        <div class="container text-center">
+            <h2 class="fw-bold mb-4">How It Works</h2>
+            <p class="mb-5 text-muted">Find your dream job in just a few simple steps</p>
+            
+            <div class="row justify-content-center">
+            <!-- Step 1 -->
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="p-4 bg-white rounded-4 shadow h-100">
+                <div class="mb-3">
+                    <i class="fas fa-user-plus fa-2x text-primary"></i>
+                </div>
+                <h5 class="fw-semibold">Create an Account</h5>
+                <p class="text-muted small">Sign up and complete your profile in minutes.</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="p-4 bg-white rounded-4 shadow h-100">
+                <div class="mb-3">
+                    <i class="fas fa-search fa-2x text-success"></i>
+                </div>
+                <h5 class="fw-semibold">Search Jobs</h5>
+                <p class="text-muted small">Browse job listings that match your skills.</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="p-4 bg-white rounded-4 shadow h-100">
+                <div class="mb-3">
+                    <i class="fas fa-paper-plane fa-2x text-warning"></i>
+                </div>
+                <h5 class="fw-semibold">Apply in One Click</h5>
+                <p class="text-muted small">Send your application instantly with one tap.</p>
+                </div>
+            </div>
+
+            <!-- Step 4 (Optional) -->
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="p-4 bg-white rounded-4 shadow h-100">
+                <div class="mb-3">
+                    <i class="fas fa-briefcase fa-2x text-danger"></i>
+                </div>
+                <h5 class="fw-semibold">Get Hired</h5>
+                <p class="text-muted small">Start your new job and build your career.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JOB CATEGORIES SECTION -->
+    <div class="row g-4 justify-content-center" id="job-categories">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold mb-3">Explore Job Categories</h2>
+            <p class="text-muted mb-4">Find jobs in your field or discover new opportunities</p>
+        </div>
+
+        {% for category in categories %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="category-card border rounded-4 p-4 h-100 shadow-sm text-center transition">
+                <div class="mb-3">
+                    <i class="{{ category.icon }} fa-2x {{ category.color }}"></i>
+                </div>
+                <h6 class="fw-semibold mb-1">{{ category.name }}</h6>
+                <p class="text-muted small">{{ category.job_count }}+ jobs</p>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Optional View All Button -->
+        <div class="col-12 text-center mt-4">
+            <a href="#" class="btn btn-outline-primary rounded-pill px-4">View All Categories</a>
+        </div>
+    </div>
+
+
+
+
+    <!-- WHY CHOOSE US SECTION -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+            <h2 class="fw-bold">Why Choose Us</h2>
+            <p class="text-muted">We empower job seekers and employers with the right tools and support</p>
+            </div>
+
+            <div class="row text-center g-4">
+            <!-- Feature 1 -->
+            <div class="col-6 col-md-3">
+                <div class="p-4 border rounded-4 h-100 bg-white shadow-sm">
+                <i class="fas fa-rocket fa-2x text-primary mb-3"></i>
+                <h6 class="fw-semibold mb-2">Fast Job Matching</h6>
+                <p class="text-muted small">Quickly connect with jobs that suit your skills and interests.</p>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-6 col-md-3">
+                <div class="p-4 border rounded-4 h-100 bg-white shadow-sm">
+                <i class="fas fa-shield-alt fa-2x text-success mb-3"></i>
+                <h6 class="fw-semibold mb-2">Secure & Verified</h6>
+                <p class="text-muted small">Every employer and job listing is verified for your safety.</p>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-6 col-md-3">
+                <div class="p-4 border rounded-4 h-100 bg-white shadow-sm">
+                <i class="fas fa-headset fa-2x text-warning mb-3"></i>
+                <h6 class="fw-semibold mb-2">24/7 Support</h6>
+                <p class="text-muted small">We’re always here to guide and assist you with any concerns.</p>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="col-6 col-md-3">
+                <div class="p-4 border rounded-4 h-100 bg-white shadow-sm">
+                <i class="fas fa-chart-line fa-2x text-danger mb-3"></i>
+                <h6 class="fw-semibold mb-2">Career Growth</h6>
+                <p class="text-muted small">Tools, tips, and jobs designed to help you grow professionally.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CAREER TIPS SECTION -->
+    <section class="py-5 bg-white" id="blog">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Career Tips & Advice</h2>
+                <p class="text-muted">Get the latest insights to boost your career growth</p>
+            </div>
+
+            {% if posts %}
+            <div class="row g-4">
+                {% for post in posts %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text text-muted small">{{ post.summary }}</p>
+                            <a href="{% url 'blog_detail' post.id %}" class="btn btn-sm btn-outline-primary rounded-pill">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted text-center">No tips available yet.</p>
+            {% endif %}
+
+            <div class="text-center mt-5">
+                <a href="{% url 'blog_list' %}" class="btn btn-primary px-4 rounded-pill">View All Tips</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container my-5">
+        <h2 class="fw-bold mb-4 text-center">What Our Users Say</h2>
+
+        {% if testimonials %}
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+            {% for testimonial in testimonials %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="card mx-auto shadow-sm border-0" style="max-width: 600px;">
+                <div class="card-body">
+                    <p class="card-text fst-italic text-center">“{{ testimonial.content }}”</p>
+                    <p class="text-muted text-end mb-0">— Anonymous</p>
+                </div>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+
+            <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        {% else %}
+        <p class="text-muted text-center">No testimonials available yet.</p>
+        {% endif %}
+    </div>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/686fd5b92b1cd4190f71309a/1ivqdlo6j';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
+
+
+{% endblock %}

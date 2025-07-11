@@ -1,0 +1,152 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+
+<!-- Custom Styles -->
+<style>
+    .container{
+        animation: fadeInUp 0.4s ease-in;
+
+    }
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    div.dt-buttons {
+        background-color: #f8f9fa; 
+        color: black;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        display: inline-flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+
+</style>
+<div class="container py-5" >
+    <h2 class="mb-4">My Posted Jobs</h2>
+
+    {% if jobs %}
+        <div class="table-responsive" >
+            <table id="jobsTable" class="table table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Date Posted</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr>
+                        <td>{{ job.title }}</td>
+                        <td>{{ job.category }}</td>
+                        <td>{{ job.location }}</td>
+                        <td>{{ job.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'delete_job' job.id %}" onsubmit="return confirm('Are you sure you want to delete this job?');">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-sm btn-danger delete-job-btn" data-url="{% url 'delete_job' job.id %}">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">You haven't posted any jobs yet.</div>
+    {% endif %}
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- DataTables Export Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#jobsTable').DataTable({
+            pageLength: 5,
+            lengthChange: false,
+            ordering: true,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    className: 'btn btn-sm text-white btn-secondary'
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-sm text-white btn-success'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-sm text-white btn-danger'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-sm text-white btn-info'
+                }
+            ],
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search jobs..."
+            }
+        });
+    });
+
+    // SweetAlert delete handler
+    $('.delete-job-btn').click(function () {
+            const deleteUrl = $(this).data('url');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Create and submit a form manually with CSRF token
+                    const form = $('<form>', {
+                        method: 'POST',
+                        action: deleteUrl
+                    });
+
+                    const csrfToken = '{{ csrf_token }}';
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: 'csrfmiddlewaretoken',
+                        value: csrfToken
+                    }));
+
+                    $('body').append(form);
+                    form.submit();
+                }
+            });
+    });
+</script>
+{% endblock %}

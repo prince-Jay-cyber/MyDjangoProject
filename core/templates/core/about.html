@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+{% block title %}About Us - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h1 class="text-center mb-4">About JobConnect Ghana</h1>
+            <p class="lead text-center">Connecting talent with opportunity across Ghana.</p>
+            
+            <div class="mt-5">
+                <h2>Our Mission</h2>
+                <p>To empower job seekers and employers by providing a seamless, efficient, and accessible platform for recruitment and career development. We aim to bridge the gap between talent and industry, fostering economic growth and professional advancement in Ghana.</p>
+            </div>
+            
+            <div class="mt-5">
+                <h2>Our Vision</h2>
+                <p>To be the leading and most trusted job portal in Ghana, recognized for our commitment to innovation, user satisfaction, and the success of our clients. We envision a future where every talented individual has the opportunity to build a fulfilling career.</p>
+            </div>
+            
+            <div class="mt-5">
+                <h2 class="text-center">Meet the Team</h2>
+                <div class="row mt-4">
+                    <div class="col-md-4 text-center">
+                        <img src="https://via.placeholder.com/150" class="rounded-circle mb-2" alt="Team Member">
+                        <h5>John Doe</h5>
+                        <p class="text-muted">CEO & Founder</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <img src="https://via.placeholder.com/150" class="rounded-circle mb-2" alt="Team Member">
+                        <h5>Jane Smith</h5>
+                        <p class="text-muted">Head of Operations</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <img src="https://via.placeholder.com/150" class="rounded-circle mb-2" alt="Team Member">
+                        <h5>Samuel Adjei</h5>
+                        <p class="text-muted">Lead Developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

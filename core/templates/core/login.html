@@ -1,0 +1,190 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Login - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    .login-split-bg {
+        min-height: 80vh;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        background: #fff;
+    }
+    .login-left {
+        background: #0a66c2;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100%;
+        padding: 3rem 2rem;
+    }
+    .login-left h2 {
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    .login-illustration {
+        width: 100%;
+        max-width: 340px;
+        margin-bottom: 2rem;
+    }
+    .login-right {
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100%;
+        padding: 3rem 2rem;
+    }
+    .login-logo {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #0a66c2;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .login-social-btn {
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        background: #f8fafc;
+        color: #222;
+        font-weight: 500;
+        width: 100%;
+        margin-bottom: 0.7rem;
+        padding: 0.6rem 0;
+        transition: background 0.2s;
+    }
+    .login-social-btn:hover {
+        background: #e8f0fe;
+    }
+    .login-or-divider {
+        text-align: center;
+        margin: 1.5rem 0 1rem 0;
+        color: #aaa;
+        font-size: 0.95rem;
+        position: relative;
+    }
+    .login-or-divider:before, .login-or-divider:after {
+        content: "";
+        display: inline-block;
+        width: 40%;
+        height: 1px;
+        background: #e0e0e0;
+        vertical-align: middle;
+        margin: 0 0.5rem;
+    }
+    .login-form-label {
+        font-weight: 500;
+        color: #222;
+    }
+    .login-form-control {
+        border-radius: 0.5rem;
+        padding: 0.7rem 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e0e0e0;
+    }
+    .login-remember {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.2rem;
+    }
+    .login-btn {
+        background: #0a66c2;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        padding: 0.7rem 0;
+        width: 100%;
+        border: none;
+        transition: background 0.2s;
+    }
+    .login-btn:hover {
+        background: #004182;
+    }
+    .login-signup-link {
+        text-align: right;
+        margin-top: 1.2rem;
+        font-size: 0.97rem;
+    }
+    .login-signup-link a {
+        color: #0a66c2;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    .login-signup-link a:hover {
+        text-decoration: underline;
+    }
+    @media (max-width: 991px) {
+        .login-split-bg { border-radius: 0; }
+    }
+    @media (max-width: 767px) {
+        .login-left, .login-right { padding: 2rem 1rem; }
+    }
+</style>
+<div class="container my-5">
+    <div class="row login-split-bg">
+        <!-- Left Side -->
+        <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center login-left">
+            <div class="w-100 text-center">
+                <h2>Find your dream<br>Job in Ghana</h2>
+                <img src="{% static 'login-illustration.png' %}" alt="Job Search Illustration" class="login-illustration mb-4">
+                <!-- You can use a placeholder or SVG illustration here -->
+            </div>
+        </div>
+        <!-- Right Side -->
+        <div class="col-lg-6 col-12 login-right">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="login-logo">
+                    <img src="{% static 'logo-1.png' %}" alt="Logo" width="36" height="36">
+                    NsaJob
+                </span>
+                <span class="login-signup-link d-none d-lg-block">
+                    Don't have an account?
+                    <a href="{% url 'register' %}">Sign up</a>
+                </span>
+            </div>
+            <h3 class="fw-bold mb-2">Login to NsaJob</h3>
+            <!-- <div class="mb-3 text-muted" style="font-size:1rem;">Now you can apply for your dream job here in NsaJob.</div>
+            <button class="login-social-btn"><i class="fab fa-facebook-f me-2 text-primary"></i> With Facebook</button>
+            <button class="login-social-btn"><i class="fab fa-google me-2 text-danger"></i> With Google</button>
+            <div class="login-or-divider">OR</div> -->
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+                <label class="login-form-label" for="id_username">Username/email</label>
+                <input type="text" name="username" id="id_username" class="form-control login-form-control" required>
+                <label class="login-form-label" for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" class="form-control login-form-control" required>
+                <div class="login-remember">
+                    <div>
+                        <input type="checkbox" id="remember_me" name="remember_me" style="margin-right:5px;">
+                        <label for="remember_me" style="margin-bottom:0;">Remember me</label>
+                    </div>
+                    <a href="{% url 'jobseeker_password_reset' %}" class="text-primary" style="font-size:0.97rem;">Forgot password?</a>
+                </div>
+                <p>
+                    <i>
+                        Click to login as: 
+                        <a href="{% url 'employer_login' %}" class="text-success" style="text-decoration: none;">
+                            <i class="fas fa-briefcase me-1"></i> Employer
+                        </a>
+                    </i>
+                </p>
+
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div class="login-signup-link d-lg-none mt-3">
+                Don't have an account?
+                <a href="{% url 'register' %}">Sign up</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

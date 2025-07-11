@@ -1,0 +1,145 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #f3f6f8;
+    }
+
+    .linkedin-job-wrapper {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        animation: fadeInUp 0.6s ease-in-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .job-header {
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .job-header img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #0a66c2;
+    }
+
+    .job-header h2 {
+        font-weight: 600;
+        font-size: 1.6rem;
+        color: #0a66c2;
+        margin: 0;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    form p {
+        margin-bottom: 1rem;
+    }
+
+    .btn-primary {
+        width: 200px;
+        padding: 10px;
+        font-weight: 600;
+        background-color: #0a66c2;
+        border: none;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #004182;
+        transform: translateY(-2px);
+    }
+
+    .alert {
+        margin-bottom: 20px;
+        border-radius: 8px;
+        padding: 1rem;
+        font-weight: 500;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .submit-container {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+
+        .job-header {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+{% if user.is_authenticated %}
+    <div class="container linkedin-job-wrapper">
+        <div class="job-header">
+            {% if request.user.profile.logo %}
+                <img src="{{ request.user.profile.logo.url }}" alt="Company Logo">
+            {% endif %}
+            <div>
+                <h2>Hello, {{ user.username }} 👋</h2>
+                <p class="text-muted mb-0">Let’s find the right candidate for your company.</p>
+            </div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <h4 class="mb-3 text-secondary">Job Posting Details</h4>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-grid">
+                {{ form.as_p }}
+            </div>
+            <div class="submit-container">
+                <button type="submit" class="btn btn-primary mt-4">🚀 Post Job</button>
+            </div>
+        </form>
+    </div>
+{% else %}
+    <div class="container text-center mt-5">
+        <h3>Please log in to post a job.</h3>
+    </div>
+{% endif %}
+
+{% endblock %}

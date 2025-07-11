@@ -1,0 +1,87 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h3 class="text-center fw-bold mb-4">What Our Users Say</h3>
+<div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {% for t in testimonials %}
+    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+      <div class="bg-light p-4 rounded shadow-sm mx-auto text-center" style="max-width: 600px;">
+        <p class="mb-1">"{{ t.content }}"</p>
+        <small class="text-muted">Anonymous User • {{ t.created_at|date:"F j, Y" }}</small>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+{% if user.is_authenticated %}
+<div class="mt-5">
+  <h4 class="text-center">Share Your Experience</h4>
+  <form method="post" action="{% url 'submit_testimonial' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary w-100">Submit Testimonial</button>
+  </form>
+</div>
+{% else %}
+<div class="mt-5 text-center">
+  <p>Please <a href="{% url 'login' %}">log in</a> to submit your testimonial.</p>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}   
+<style>
+    .carousel-item {
+        transition: transform 0.5s ease-in-out;
+    }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: #0a66c2;
+        border-radius: 50%;
+    }
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+    .carousel-inner {
+        margin: 0 auto;
+    }
+    .carousel-item p {
+        font-size: 1.2rem;
+        color: #333;
+    }
+    .carousel-item small {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    .testimonial-form {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .testimonial-form h4 {
+        margin-bottom: 1rem;
+    }
+    .testimonial-form form {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .testimonial-form form .form-control {
+        margin-bottom: 1rem;
+    }
+    .testimonial-form form button {
+        background: #0a66c2;
+        color: white;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}

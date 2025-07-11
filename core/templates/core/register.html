@@ -1,0 +1,165 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Register - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    .register-split-bg {
+        min-height: 80vh;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        background: #fff;
+    }
+    .register-left {
+        background: #0a66c2;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100%;
+        padding: 3rem 2rem;
+    }
+    .register-left h2 {
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    .register-illustration {
+        width: 100%;
+        max-width: 340px;
+        margin-bottom: 2rem;
+    }
+    .register-right {
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100%;
+        padding: 3rem 2rem;
+    }
+    .register-logo {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #0a66c2;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .register-social-btn {
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        background: #f8fafc;
+        color: #222;
+        font-weight: 500;
+        width: 100%;
+        margin-bottom: 0.7rem;
+        padding: 0.6rem 0;
+        transition: background 0.2s;
+    }
+    .register-social-btn:hover {
+        background: #e8f0fe;
+    }
+    .register-or-divider {
+        text-align: center;
+        margin: 1.5rem 0 1rem 0;
+        color: #aaa;
+        font-size: 0.95rem;
+        position: relative;
+    }
+    .register-or-divider:before, .register-or-divider:after {
+        content: "";
+        display: inline-block;
+        width: 40%;
+        height: 1px;
+        background: #e0e0e0;
+        vertical-align: middle;
+        margin: 0 0.5rem;
+    }
+    .register-form-label {
+        font-weight: 500;
+        color: #222;
+    }
+    .register-form-control {
+        border-radius: 0.5rem;
+        padding: 0.7rem 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e0e0e0;
+    }
+    .register-btn {
+        background: #0a66c2;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        padding: 0.7rem 0;
+        width: 100%;
+        border: none;
+        transition: background 0.2s;
+    }
+    .register-btn:hover {
+        background: #004182;
+    }
+    .register-login-link {
+        text-align: right;
+        margin-top: 1.2rem;
+        font-size: 0.97rem;
+    }
+    .register-login-link a {
+        color: #0a66c2;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    .register-login-link a:hover {
+        text-decoration: underline;
+    }
+    @media (max-width: 991px) {
+        .register-split-bg { border-radius: 0; }
+    }
+    @media (max-width: 767px) {
+        .register-left, .register-right { padding: 2rem 1rem; }
+    }
+</style>
+<div class="container my-5">
+    <div class="row register-split-bg">
+        <!-- Left Side -->
+        <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center register-left">
+            <div class="w-100 text-center">
+                <h2>Join NsaJob<br>and start your career journey</h2>
+                <img src="{% static 'register-illustrations.png' %}" alt="Register Illustration" class="register-illustration mb-4">
+                <!-- You can use a placeholder or SVG illustration here -->
+            </div>
+        </div>
+        <!-- Right Side -->
+        <div class="col-lg-6 col-12 register-right">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="register-logo">
+                    <img src="{% static 'logo-1.png' %}" alt="Logo" width="36" height="36">
+                    NsaJob
+                </span>
+                <span class="register-login-link d-none d-lg-block">
+                    Already have an account?
+                    <a href="{% url 'login' %}">Login</a>
+                </span>
+            </div>
+            <h3 class="fw-bold mb-2">Create Your Account</h3>
+            <div class="mb-3 text-muted" style="font-size:1rem;">Sign up to apply for jobs and connect with top employers.</div>
+            <!-- <button class="register-social-btn"><i class="fab fa-facebook-f me-2 text-primary"></i> With Facebook</button>
+            <button class="register-social-btn"><i class="fab fa-google me-2 text-danger"></i> With Google</button>
+            <div class="register-or-divider">OR</div> -->
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="register-btn">Register</button>
+            </form>
+            <div class="register-login-link d-lg-none mt-3">
+                Already have an account?
+                <a href="{% url 'login' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

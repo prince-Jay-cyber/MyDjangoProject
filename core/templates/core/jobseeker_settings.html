@@ -1,0 +1,91 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f3f2ef;
+    }
+    .settings-card {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #0a66c2;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #e6e6e6;
+        padding-bottom: 8px;
+    }
+    .btn-linkedin {
+        background-color: #0a66c2;
+        color: #fff;
+        border: none;
+    }
+    .btn-linkedin:hover {
+        background-color: #004182;
+    }
+</style>
+
+<div class="container py-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <!-- Left Column: Profile Info -->
+        <div class="col-lg-6 mb-4">
+            <div class="settings-card">
+                <h4 class="text-center mb-4" style="color:#0a66c2;">👤 Profile Settings</h4>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <div class="section-title">🧑‍💼 Basic Information</div>
+                        {{ user_form|crispy }}
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="section-title">📝 Bio & Resume</div>
+                        {{ profile_form|crispy }}
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" name="save_profile" class="btn btn-linkedin">
+                            💾 Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Change Password -->
+        <div class="col-lg-6 mb-4">
+            <div class="settings-card">
+                <h4 class="text-center mb-4" style="color:#0a66c2;">🔒 Security</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <div class="section-title">Change Password</div>
+                        {{ password_form|crispy }}
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" name="change_password" class="btn btn-outline-secondary">
+                            🔐 Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

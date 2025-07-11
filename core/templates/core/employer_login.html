@@ -1,0 +1,230 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Employer Login - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    .employer-login-split-bg {
+        min-height: 80vh;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        background: #fff;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .employer-login-left {
+        background: #0a66c2;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100%;
+        padding: 3rem 2rem;
+        flex: 1 1 50%;
+        text-align: center;
+    }
+    .employer-login-left h2 {
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    .employer-login-illustration {
+        width: 100%;
+        max-width: 340px;
+        margin-bottom: 2rem;
+    }
+    .employer-login-right {
+        background: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100%;
+        padding: 3rem 2rem;
+        flex: 1 1 50%;
+    }
+    .employer-login-logo-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    .employer-login-logo {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #0a66c2;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .employer-login-signup-link {
+        font-size: 1rem;
+        color: #222;
+    }
+    .employer-login-signup-link a {
+        color: #0a66c2;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    .employer-login-signup-link a:hover {
+        text-decoration: underline;
+    }
+    .employer-login-form-box {
+        border-radius: 1rem;
+        padding: 2.5rem 2rem 2rem 2rem;
+        max-width: 400px;
+        margin: 0 auto;
+        color: #222;
+    }
+    .employer-login-form-box h3 {
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+        letter-spacing: 1px;
+        color: #0a66c2;
+        text-align: left;
+    }
+    .employer-login-form-box .subtitle {
+        color: #888;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .employer-login-social-btn {
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        background: #f8fafc;
+        color: #222;
+        font-weight: 500;
+        width: 100%;
+        margin-bottom: 0.7rem;
+        padding: 0.6rem 0;
+        transition: background 0.2s;
+    }
+    .employer-login-social-btn:hover {
+        background: #e8f0fe;
+    }
+    .employer-login-or-divider {
+        text-align: center;
+        margin: 1.5rem 0 1rem 0;
+        color: #aaa;
+        font-size: 0.95rem;
+        position: relative;
+    }
+    .employer-login-or-divider:before, .employer-login-or-divider:after {
+        content: "";
+        display: inline-block;
+        width: 40%;
+        height: 1px;
+        background: #e0e0e0;
+        vertical-align: middle;
+        margin: 0 0.5rem;
+    }
+    .employer-login-form-label {
+        font-weight: 500;
+        color: #222;
+    }
+    .employer-login-form-control {
+        border-radius: 0.5rem;
+        padding: 0.7rem 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e0e0e0;
+        background: #f8fafc;
+    }
+    .employer-login-remember {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.2rem;
+    }
+    .employer-login-btn {
+        background: #0a66c2;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        padding: 0.7rem 0;
+        width: 100%;
+        border: none;
+        transition: background 0.2s;
+    }
+    .employer-login-btn:hover {
+        background: #004182;
+    }
+    .employer-login-link-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1rem;
+        margin-top: 0.7rem;
+    }
+    .employer-login-link-row a {
+        color: #0a66c2;
+        text-decoration: underline;
+        font-weight: 500;
+    }
+    @media (max-width: 991px) {
+        .employer-login-split-bg { border-radius: 0; }
+    }
+    @media (max-width: 767px) {
+        .employer-login-left, .employer-login-right { padding: 2rem 1rem; }
+    }
+</style>
+<div class="container my-5">
+    <div class="row employer-login-split-bg">
+        <!-- Left Side -->
+        <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center employer-login-left">
+            <div class="w-100 text-center">
+               <h2>Hire the Best<br>Job Seekers in Ghana</h2>
+
+                <img src="{% static 'employer_illustration.png' %}" alt="Employer Login Illustration" class="employer-login-illustration mb-4">
+            </div>
+        </div>
+        <!-- Right Side -->
+        <div class="col-lg-6 col-12 employer-login-right">
+            <div class="employer-login-logo-row mb-4">
+                <span class="employer-login-logo">
+                    <img src="{% static 'logo-1.png' %}" alt="Logo" width="36" height="36">
+                    NsaJob
+                </span>
+                <span class="employer-login-signup-link d-none d-lg-block">
+                    Don't have an account?
+                    <a href="{% url 'employer_register' %}">Sign up</a>
+                </span>
+            </div>
+            <div class="employer-login-form-box">
+                <h3>Employer Login</h3>
+                <div class="subtitle mb-3">Now you can find the best talent for your company here in NsaJob.</div>
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <label class="employer-login-form-label" for="id_username">Username/email</label>
+                    <input type="text" name="username" id="id_username" class="form-control employer-login-form-control" required>
+                    <label class="employer-login-form-label" for="id_password">Password</label>
+                    <input type="password" name="password" id="id_password" class="form-control employer-login-form-control" required>
+                    <div class="employer-login-remember">
+                        <div>
+                            <input type="checkbox" id="remember_me" name="remember_me" style="margin-right:5px;">
+                            <label for="remember_me" style="margin-bottom:0;">Remember me</label>
+                        </div>
+                        <a href="{% url 'employer_password_reset' %}" class="text-primary" style="font-size:0.97rem;">Forgot password?</a>
+
+                    </div>
+                    <p>
+                        <i>
+                            Click to login as: 
+                            <a href="{% url 'login' %}" class="text-success" style="text-decoration: none;">
+                                <i class="fas fa-briefcase me-1"></i> Job Seeker
+                            </a>
+                        </i>
+                    </p>
+                    <button type="submit" class="employer-login-btn">Login</button>
+                </form>
+                <div class="employer-login-signup-link d-lg-none mt-3">
+                    Don't have an account?
+                    <a href="{% url 'employer_register' %}">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

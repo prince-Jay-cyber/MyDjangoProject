@@ -1,0 +1,422 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block title %}Dashboard - {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<style>
+    .navbar-wrapper{
+        position: sticky;
+        top: 0;
+        z-index: 1050;
+        width: 100%;
+        padding: 15px 20px;
+        box-shadow: 0 20px 5px  rgba(0, 0, 0, 0.1);
+        background-color: rgba(37, 90, 150, 0.776);
+        border-bottom-left-radius: 20px;
+        border-top-right-radius: 20px;
+        animation: fadeInUp 0.4s ease-in;
+
+    }
+    @keyframes fadeInUp{
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    .navbar-content{
+        max-width: 1700px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    body{
+        padding-top: 80px;
+    }
+    .suggested-job-card {
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+        padding: 1rem 1rem;
+        margin-bottom: 1rem;
+        transition: box-shadow 0.2s;
+    }
+    .suggested-job-card:hover {
+        box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    .edit-profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        left: 30px;
+    }
+
+    .tips-card {
+        background: #f8fafc;
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .newsletter-card {
+        background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+        color: #fff;
+        border-radius: 1rem;
+        padding: 1.2rem 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .network-card {
+        background: #f8fafc;
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .topbar-link {
+        color: #333;
+        text-decoration: none;
+        padding: 10px;
+        font-size: 1.2rem;
+        animation: fadeInUp 0.4s ease-in;
+
+    }
+    .topbar-link.active {
+        color: #0073b1;
+        font-weight: bold;
+        transition: all  0.2s ease;
+    }
+    .topbar-link:hover {
+        color: #005582;
+    }
+
+    .topbar-link .badge {
+        font-size: 0.65rem;
+        padding: 0.3em 0.5em;
+        z-index: 10;
+    }
+    .dashboard-content,
+    .container-fluid {
+        animation: fadeInUp 0.4s ease-in;
+    }
+
+    .card-category-box {
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: 0.2s ease-in-out;
+    }
+
+    .card-category-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .suggested-job-card {
+        background-color: #fff;
+        border: 1px solid #e1e1e1;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        transition: box-shadow 0.2s ease;
+    }
+
+    .suggested-job-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .suggested-job-card img {
+        border-radius: 0.25rem;
+    }
+
+
+</style>
+<div id="loader" class="loader"></div>
+<!-- Top Navigation Bar (LinkedIn-style) -->
+<div class="container-fluid bg-white py-2 px-3 mb-4  shadow-sm" style="position:sticky;top:0;z-index:100;">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand me-3" href="{% url 'landing' %}">
+                <img src="{% static 'logo-1.png' %}" alt="Logo" width="44" height="44">
+            </a>
+            <form class="d-none d-md-flex" method="get" action="{% url 'job_list' %}">
+                <input type="text" class="form-control rounded-pill" name="keyword" placeholder="Search for Job..." style="width: 320px;">
+            </form>
+        </div>
+        <div class="d-flex align-items-center" >
+            <a href="{% url 'home' %}" class="topbar-link active text-center">
+                <span class="topbar-icon"><i class="fas fa-home"></i> Home</span>
+
+            </a>
+            
+            
+            <a href="{% url 'job_list' %}" class="topbar-link text-center">
+                <span class="topbar-icon"><i class="fas fa-briefcase"></i> Jobs</span>
+            </a>
+            <a href="{% url 'view_profile' %}" class="topbar-link text-center">
+                <span class="topbar-icon"><i class="fas fa-user"></i> Profile</span> 
+            </a>
+
+            <a href="{% url 'landing' %}" class="topbar-link text-center">
+                <span class="topbar-icon"><i class="fas fa-globe"></i> Website</span> 
+            </a>
+
+            <a href="{% url 'job_list' %}" class="topbar-link text-center position-relative">
+                <span class="topbar-icon">
+                    <i class="fas fa-bell"></i>Alerts
+                </span>
+                {% if new_job_count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ new_job_count }}
+                    </span>
+                {% endif %}
+            </a>
+
+            
+
+
+            <a href="{% url 'jobseeker_settings' %}" class="topbar-link text-center">
+                <span class="topbar-icon"><i class="fas fa-cogs"></i> Settings</span> 
+            </a>
+        </div>
+        <div>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger rounded-pill fw-bold px-4">Logout</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+<br>
+<div id="dashboard-content" style="display:none;">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left Sidebar -->
+            <aside class="col-lg-3 mb-4">
+                
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="edit-profile-avatar">
+                            {% if request.user.profile.photo %}
+                                <img src="{{ request.user.profile.photo.url }}" alt="Profile" class="edit-profile-avatar shadow">
+                            {% else %}
+                                <img src="{% static 'employee.png' %}" alt="Profile" class="edit-profile-avatar shadow">
+                            {% endif %}
+                        </div>
+                        <h5 class="mb-0">{{ user.get_full_name|default:user.username }}</h5>
+                        <div class="text-muted small mb-2">Job Seeker</div>
+                        <a href="{% url 'view_profile' %}" class="btn btn-outline-primary btn-sm mb-2 w-100">View Profile</a>
+                        <a href="{% url 'edit_profile' %}" class="btn btn-outline-secondary btn-sm w-100">Edit Profile</a>
+                        <br>
+                    </div>
+                </div>
+                <div class="list-group mb-3 shadow-sm">
+                    <a href="{% url 'my_applications' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-alt me-2"></i> My Applications
+                    </a>
+                    <a href="{% url 'bookmarked_jobs' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-bookmark me-2"></i> Bookmarked Jobs
+                    </a>
+                    <a href="{% url 'recommend_jobs' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-star me-2"></i> Recommended Jobs
+                    </a>
+                </div>
+
+                <!-- Useful Tools or Features -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-2">📌 Quick Tools</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="{% url 'resume_builder' %}">Build Resume</a></li>
+                            <li><a href="{% url 'tips' %}">Interview Tips</a></li>
+                            <li><a href="{% url 'saved_jobs' %}">Saved Jobs</a></li>
+                            <li><a href="{% url 'track_application' %}">Track Applications</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Suggested Jobs Section -->
+                <h5 class="fw-bold mt-4 mb-3">
+                    <i class="fas fa-lightbulb text-warning"></i> Suggested Jobs For You
+                </h5>
+
+                {% if suggested_jobs %}
+                    <div>
+                        {% for job in suggested_jobs %}
+                        <div class="suggested-job-card mb-3 p-3 border rounded shadow-sm bg-white">
+                            <div class="d-flex align-items-center">
+                                <img src="{% static 'company-2.png' %}" alt="Company Logo" class="rounded me-3" width="36" height="36">
+                                <div>
+                                    <strong>{{ job.title }}</strong>
+                                    <div class="text-muted small">{{ job.location }} &middot; {{ job.category }}</div>
+                                </div>
+                                <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary btn-sm ms-auto">Apply</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">No suggestions available right now.</div>
+                {% endif %}
+
+                
+
+            </aside>
+
+            <!-- Main Feed -->
+            <main class="col-lg-6 mb-4">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <form method="get" class="row g-2 align-items-center">
+                            <div class="col-md-4">
+                                {{ form.keyword|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.location|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.category|as_crispy_field }}
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Job Feed -->
+                {% if jobs %}
+                    {% for job in jobs %}
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="{% static 'job.png' %}" alt="Company" class="rounded me-2" width="40" height="40">
+                                    <div>
+                                        <strong>{{ job.title }}</strong>
+                                        <div class="text-muted small">{{ job.location }} &middot; {{ job.category }}</div>
+                                    </div>
+                                    <span class="ms-auto text-muted small">{{ job.created_at|timesince }} ago</span>
+                                </div>
+                                <p class="mb-2">{{ job.description|truncatewords:25 }}</p>
+                                <div class="company mt-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary btn-sm">
+                                            View Details
+                                        </a>
+                                        <p class="mb-0 text-muted small">
+                                            Posted by: <span class="fw-semibold">{{ job.get_company_display_name }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <!-- Pagination -->
+                    <nav aria-label="Job pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if jobs.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ jobs.previous_page_number }}">Previous</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            {% endif %}
+
+                            {% for num in jobs.paginator.page_range %}
+                                {% if jobs.number == num %}
+                                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                                {% elif num > jobs.number|add:'-3' and num < jobs.number|add:'3' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if jobs.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ jobs.next_page_number }}">Next</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle-fill"></i> No jobs match your search criteria. Please try again.
+                    </div>
+                {% endif %}
+
+                
+
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="col-lg-3 mb-4">
+                <!-- Trending Sectors -->
+                <div class="card mb-4 shadow-sm border-0" style="border-left: 5px solid #0d6efd; background-color: #f8f9fa;">
+                    <div class="card-body">
+                        <h5 class="fw-semibold mb-4 text-primary">
+                            <i class="fas fa-fire text-danger me-2"></i>Job Categories
+                        </h5>
+                        {% for category in categories %}
+                        <div class="card-category-box me-2 mb-3">
+                            <span class="fw-semibold text-dark">{{ category.name }}</span>
+                            <p class="text-muted small mb-0">{{ category.job_count }}+ jobs</p>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+
+
+                <!-- Career Tips Card -->
+                <div class="tips-card mb-3">
+                    <h6 class="fw-bold mb-2"><i class="fas fa-lightbulb text-warning"></i> Career Tips</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><i class="fas fa-check-circle text-success"></i> Tailor your CV for each job</li>
+                        <li><i class="fas fa-check-circle text-success"></i> Prepare for interviews</li>
+                        <li><i class="fas fa-check-circle text-success"></i> Network with professionals</li>
+                    </ul>
+                    <a href="{% url 'tips' %}" class="btn btn-link btn-sm mt-2">More Tips</a>
+                </div>
+
+                
+
+                <div class="newsletter-card mt-3">
+                    <h6 class="fw-bold mb-2"><i class="fas fa-upload"></i> Upload Your Resume</h6>
+                    <p class="text-muted small mb-2">Let employers find you faster.</p>
+                    <a href="{% url 'view_profile' %}" class="btn btn-success btn-sm w-100 fw-bold">Upload Resume</a>
+                </div>
+
+
+                
+            </aside>
+
+        </div>
+    </div>
+</div>
+<script>
+    document.onreadystatechange = function() {
+        if (document.readyState === 'complete') {
+            setTimeout(function() {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'block';
+            }, 1000);
+        }
+    };
+</script>
+{% endblock %}

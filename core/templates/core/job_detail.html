@@ -1,0 +1,67 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ job.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<style>
+    .container{
+        animation: fadeInUp 0.4s ease-in;
+
+    }
+    @keyframes fadeInUp{
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+</style>
+<div class="container py-5">
+    <div class="card shadow border-0 rounded-4">
+        
+        <!-- Header Section -->
+        <div class="card-body bg-primary text-white rounded-top-4">
+            <h2 class="mb-1">{{ job.title }}</h2>
+            <p class="mb-0">
+                <i class="bi bi-building"></i> 
+                <strong>{{ job.get_company_display_name }}</strong>
+            </p>
+            <small>
+                <i class="bi bi-clock-history"></i> 
+                Posted {{ job.created_at|timesince }} ago
+            </small>
+        </div>
+
+        <!-- Details Section -->
+        <div class="card-body bg-white">
+            <div class="mb-3">
+                <span class="badge bg-secondary me-2">
+                    <i class="bi bi-geo-alt-fill"></i> {{ job.location }}
+                </span>
+                <span class="badge bg-info text-dark">
+                    <i class="bi bi-briefcase-fill"></i> {{ job.category }}
+                </span>
+            </div>
+
+            <hr>
+
+            <h5 class="fw-bold mb-3">Job Description</h5>
+            <p class="card-text fs-6 text-dark lh-lg">
+                {{ job.description|linebreaks }}
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card-footer bg-light d-flex justify-content-center gap-3 py-4 rounded-bottom-4">
+            <a href="{% url 'apply_for_job' job.id %}" class="btn btn-success btn-lg">
+                <i class="bi bi-send-check-fill"></i> Apply Now
+            </a>
+            <a href="{% url 'toggle_bookmark' job.id %}" class="btn btn-outline-warning btn-lg">
+                <i class="bi bi-bookmark-fill"></i> Bookmark
+            </a>
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-arrow-left-circle"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
